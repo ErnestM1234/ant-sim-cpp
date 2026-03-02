@@ -25,6 +25,9 @@ struct Sample {
 
   bool wallDetected = false;
   float wallAngle = 0.0f;
+
+  bool homeDetected = false;
+  float homeAngle = 0.0f;
 };
 
 /**
@@ -61,14 +64,22 @@ struct Ant {
   AntState state = AntState::SEARCHING;
   bool has_food = false;
 
+  // colony
+  sf::Vector2f colony_position;
+  float colony_radius;
+  float colony_radius_squared;
+
   // rendering
   sf::Vector2f radiusVector = {RADIUS, RADIUS};
 
-  Ant(World &world, sf::Vector2f position, int colony_id)
-      : world(world), position(position), colony_id(colony_id) {
+  Ant(World &world, sf::Vector2f position, int colony_id,
+      sf::Vector2f colony_position, float colony_radius)
+      : world(world), position(position), colony_id(colony_id),
+        colony_position(colony_position), colony_radius(colony_radius) {
     static std::uniform_real_distribution<float> angle_dist(0.0f, 2.0f * M_PI);
     float angle = angle_dist(rng());
     velocity = {cos(angle) * SPEED, sin(angle) * SPEED};
+    colony_radius_squared = colony_radius * colony_radius;
   }
 
   void update(float dt) {

@@ -28,7 +28,6 @@ void Ant::searchForFood(float dt) {
   if (sample.foodDetected) {
     // follow food trail
     velocity = {cos(sample.foodAngle) * SPEED, sin(sample.foodAngle) * SPEED};
-    std::cout << "Found food at " << sample.foodAngle << std::endl;
     return;
   } else if (sample.toHomeScore > 0) {
     // follow home pheromone trail
@@ -51,6 +50,27 @@ void Ant::returnToColony(float dt) {
   colonyCell.toHomeScore =
       fmin(1.0f, colonyCell.toHomeScore + TO_HOME_SCORE_DEPOSIT);
 
+  // handle meet colony
+  float distance_to_colony = (position - colony_position).lengthSquared();
+  if (distance_to_colony < colony_radius_squared) {
+    this->has_food = false;
+    this->state = AntState::SEARCHING;
+    return;
+  }
+
+  // follow trails
+  Sample sample = sampleCone();
+  if (sample.homeDetected) {
+    // follow home pheromone trail
+    velocity = {cos(sample.toHomeAngle) * SPEED,
+                sin(sample.toHomeAngle) * SPEED};
+    return;
+  } else if (sample.toFoodScore > 0) {
+    // follow food trail
+    velocity = {cos(sample.foodAngle) * SPEED, sin(sample.foodAngle) * SPEED};
+    return;
+  }
+
   // random wobble updates
   static std::normal_distribution<float> wobble(0.0f, 1.0f);
   float angle = atan2(velocity.y, velocity.x);
@@ -68,9 +88,12 @@ Sample Ant::sampleCone(float detection_radius, float detection_angle,
               .foodDetected = false,
               .foodAngle = 0.0f,
               .wallDetected = false,
-              .wallAngle = 0.0f};
+              .wallAngle = 0.0f,
+              .homeDetected = false,
+              .homeAngle = 0.0f};
   float best_food_distance = std::numeric_limits<float>::max();
   float best_wall_distance = std::numeric_limits<float>::max();
+  float best_home_distance = std::numeric_limits<float>::max();
 
   // sample the world in a cone shape
   for (int i = 0; i < num_angle_samples; i++) {
@@ -115,6 +138,13 @@ Sample Ant::sampleCone(float detection_radius, float detection_angle,
           best.wallDetected = true;
           best.wallAngle = angle;
         }
+      }
+      // distance to home
+      float home_distance = (sample_pos - colony_position).lengthSquared();
+      if (home_distance < colony_radius_squared) {
+        best_home_distance = home_distance;
+        best.homeDetected = true;
+        best.homeAngle = angle;
       }
     }
   }

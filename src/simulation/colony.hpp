@@ -28,7 +28,7 @@ struct Colony {
          int numAnts = DEFAULT_NUM_ANTS)
       : position(position), colony_id(colony_id) {
     for (int i = 0; i < numAnts; i++) {
-      ants.push_back(Ant(world, position, colony_id));
+      ants.push_back(Ant(world, position, colony_id, position, RADIUS));
     }
   }
 

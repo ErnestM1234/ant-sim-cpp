@@ -9,8 +9,8 @@ template <typename T> struct Grid {
   // constants
   constexpr static const float DEFAULT_X_OFFSET = 0.0f;
   constexpr static const float DEFAULT_Y_OFFSET = 0.0f;
-  constexpr static const float DEFAULT_CELL_WIDTH = 1.0f;
-  constexpr static const float DEFAULT_CELL_HEIGHT = 1.0f;
+  constexpr static const float DEFAULT_CELL_WIDTH = 5.0f;
+  constexpr static const float DEFAULT_CELL_HEIGHT = 5.0f;
   constexpr static const int DEFAULT_WIDTH =
       Config::WINDOW_WIDTH / DEFAULT_CELL_WIDTH;
   constexpr static const int DEFAULT_HEIGHT =
