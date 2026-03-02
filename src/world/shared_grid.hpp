@@ -12,28 +12,25 @@ struct SharedCell {
   float foodScore = 0.0f;
 };
 
-struct SharedGrid {
+struct SharedGrid : Grid<SharedCell> {
 
-  // properties
-  Grid<SharedCell> grid;
-
-  SharedGrid() : grid() {}
-  SharedGrid(int width, int height) : grid(width, height) {}
+  SharedGrid() : Grid<SharedCell>() {}
+  SharedGrid(int width, int height) : Grid<SharedCell>(width, height) {}
 
   void update(float dt) {
     // No-op
   }
 
   void render(sf::RenderWindow &window) {
-    for (int y = 0; y < grid.height; y++) {
-      for (int x = 0; x < grid.width; x++) {
-        SharedCell cell = grid.get(x, y);
+    for (int y = 0; y < height; y++) {
+      for (int x = 0; x < width; x++) {
+        SharedCell cell = get(x, y);
         if (cell.wallScore > 0) {
           sf::Color color = sf::Color::White;
-          grid.renderCell(window, x, y, color);
+          renderCell(window, x, y, color);
         } else if (cell.foodScore > 0) {
           sf::Color color = sf::Color::Yellow;
-          grid.renderCell(window, x, y, color);
+          renderCell(window, x, y, color);
         }
       }
     }

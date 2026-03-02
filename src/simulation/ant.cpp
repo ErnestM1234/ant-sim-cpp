@@ -10,6 +10,11 @@ AntState Ant::transition() {
 // ===== STATES ===== //
 
 void Ant::searchForFood(float dt) {
+  // // handle pheromone trail
+  // world.colonyGrids[colony_id].get(position.x, position.y).toFoodScore
+  // += 1.0f;
+
+  // handle movement updates
   static std::normal_distribution<float> wobble(0.0f, 1.0f);
   float angle = atan2(velocity.y, velocity.x);
   angle += wobble(rng()) * sqrt(dt) * WOBBLE_ANGLE;
