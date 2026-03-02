@@ -21,6 +21,20 @@ struct World {
       colonyGrids.push_back(ColonyGrid());
     }
   }
+
+  void update(float dt) {
+    sharedGrid.update(dt);
+    for (auto &colonyGrid : colonyGrids) {
+      colonyGrid.update(dt);
+    }
+  }
+
+  void render(sf::RenderWindow &window) {
+    sharedGrid.render(window);
+    for (auto &colonyGrid : colonyGrids) {
+      colonyGrid.render(window);
+    }
+  }
 };
 
 #endif // WORLD_HPP
