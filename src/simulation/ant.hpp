@@ -20,7 +20,7 @@ struct Sample {
   float toHomeScore = 0.0f;
   float toHomeAngle = 0.0f;
 
-  float foodScore = 0.0f;
+  bool foodDetected = false;
   float foodAngle = 0.0f;
 
   bool wallDetected = false;
@@ -42,11 +42,12 @@ struct Ant {
 
   // sample constants
   constexpr static const float DEFAULT_DETECTION_RADIUS =
-      100.0f; // in world units
+      50.0f; // in world units
   constexpr static const float DEFAULT_DETECTION_ANGLE = 45.0f * M_PI / 180.0f;
   constexpr static const int DEFAULT_NUM_ANGLE_SAMPLES = 5;
   constexpr static const int DEFAULT_NUM_SAMPLES_PER_ANGLE = 5;
-  constexpr static const bool SHOW_SAMPLING_CONE = false;
+  constexpr static const bool SHOW_SAMPLING_CONE = true;
+  constexpr static const bool SHOW_SAMPLING_DOTS = true;
 
   // position
   sf::Vector2f position;
@@ -97,7 +98,9 @@ struct Ant {
       break;
     }
     window.draw(shape);
-    renderSamplingCone(window);
+    if (SHOW_SAMPLING_CONE) {
+      renderSamplingCone(window);
+    }
   }
 
   /**

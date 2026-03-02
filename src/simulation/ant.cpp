@@ -1,6 +1,7 @@
 #include "ant.hpp"
 
 #include "../world/colony_grid.hpp"
+#include <iostream>
 
 // ===== STATES ===== //
 
@@ -24,7 +25,13 @@ void Ant::searchForFood(float dt) {
 
   // follow go home pheromone trails
   Sample sample = sampleCone();
-  if (sample.toHomeScore > 0) {
+  if (sample.foodDetected) {
+    // follow food trail
+    velocity = {cos(sample.foodAngle) * SPEED, sin(sample.foodAngle) * SPEED};
+    std::cout << "Found food at " << sample.foodAngle << std::endl;
+    return;
+  } else if (sample.toHomeScore > 0) {
+    // follow home pheromone trail
     velocity = {cos(sample.toHomeAngle) * SPEED,
                 sin(sample.toHomeAngle) * SPEED};
     return;
@@ -58,18 +65,20 @@ Sample Ant::sampleCone(float detection_radius, float detection_angle,
               .toFoodAngle = 0.0f,
               .toHomeScore = 0.0f,
               .toHomeAngle = 0.0f,
-              .foodScore = 0.0f,
+              .foodDetected = false,
               .foodAngle = 0.0f,
               .wallDetected = false,
               .wallAngle = 0.0f};
+  float best_food_distance = std::numeric_limits<float>::max();
   float best_wall_distance = std::numeric_limits<float>::max();
 
   // sample the world in a cone shape
   for (int i = 0; i < num_angle_samples; i++) {
+    // Get angle
+    float angle = heading - detection_angle +
+                  (2.0f * detection_angle * i) / (num_angle_samples - 1);
     for (int j = 1; j <= num_samples_per_angle; j++) {
       // Get location
-      float angle = heading - detection_angle +
-                    (2.0f * detection_angle * i) / (num_angle_samples - 1);
       sf::Vector2f sample_pos = world.sharedGrid.getToroidalPosition(
           position + sf::Vector2f{cos(angle), sin(angle)} *
                          (detection_radius * j / num_samples_per_angle));
@@ -87,10 +96,15 @@ Sample Ant::sampleCone(float detection_radius, float detection_angle,
         best.toFoodScore = toFoodScore;
         best.toFoodAngle = angle;
       }
+      // closest food
       float foodScore = world.sharedGrid.get(sample_pos).foodScore;
-      if (foodScore > best.foodScore) {
-        best.foodScore = foodScore;
-        best.foodAngle = angle;
+      if (foodScore > 0) {
+        float food_distance = (sample_pos - position).lengthSquared();
+        if (foodScore < best_food_distance) {
+          best_food_distance = foodScore;
+          best.foodAngle = angle;
+          best.foodDetected = true;
+        }
       }
       // closest wall
       float wall_score = world.sharedGrid.get(sample_pos).wallScore;
@@ -114,15 +128,30 @@ void Ant::renderSamplingCone(sf::RenderWindow &window, float detection_radius,
   float heading = atan2(velocity.y, velocity.x);
   sf::Color color(255, 255, 0, 40); // faint yellow
   sf::VertexArray cone(sf::PrimitiveType::TriangleFan);
+  sf::VertexArray dots(sf::PrimitiveType::Points);
   cone.append({position, color}); // center point
 
-  int segments = num_angle_samples;
-  for (int i = 0; i <= segments; i++) {
-    float angle =
-        heading - detection_angle + (2.0f * detection_angle * i) / segments;
+  for (int i = 0; i <= num_angle_samples; i++) {
+    // Get angle
+    float angle = heading - detection_angle +
+                  (2.0f * detection_angle * i) / num_angle_samples;
     sf::Vector2f tip =
         position + sf::Vector2f{cos(angle), sin(angle)} * detection_radius;
     cone.append({tip, color});
+    if (!SHOW_SAMPLING_DOTS) {
+      continue;
+    }
+    for (int j = 1; j <= num_samples_per_angle; j++) {
+      // Get location
+      sf::Vector2f sample_pos = world.sharedGrid.getToroidalPosition(
+          position + sf::Vector2f{cos(angle), sin(angle)} *
+                         (detection_radius * j / num_samples_per_angle));
+      dots.append({sample_pos, sf::Color::White});
+    }
+  }
+
+  if (SHOW_SAMPLING_DOTS) {
+    window.draw(dots);
   }
 
   window.draw(cone);
