@@ -38,6 +38,7 @@ template <typename T> struct Grid {
 
   // Get via grid coordinates
   T &get(int x, int y) { return cells[y * width + x]; }
+  T &get(sf::Vector2i position) { return get(position.x, position.y); }
   // Get via position coordinates
   T &get(float x, float y) {
     return get(static_cast<int>((x - xOffset) / cellWidth),
@@ -47,6 +48,9 @@ template <typename T> struct Grid {
 
   // Set via grid coordinates
   void set(int x, int y, T value) { cells[y * width + x] = value; }
+  void set(sf::Vector2i position, T value) {
+    set(position.x, position.y, value);
+  }
   // Set via position coordinates
   void set(float x, float y, T value) {
     set(static_cast<int>((x - xOffset) / cellWidth),

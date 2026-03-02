@@ -11,7 +11,7 @@ struct ColonyCell {
 
 struct ColonyGrid : Grid<ColonyCell> {
   // constants
-  constexpr static const float DECAY_RATE = 0.0f;
+  constexpr static const float DECAY_RATE = 0.1f;
 
   // properties
   ColonyGrid() : Grid<ColonyCell>() {}

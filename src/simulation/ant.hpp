@@ -11,15 +11,40 @@ enum class AntState {
 };
 
 /**
+ * Represents a sample of the world
+ */
+struct Sample {
+  float toFoodScore = 0.0f;
+  float toFoodAngle = 0.0f;
+
+  float toHomeScore = 0.0f;
+  float toHomeAngle = 0.0f;
+
+  float foodScore = 0.0f;
+  float foodAngle = 0.0f;
+
+  bool wallDetected = false;
+  float wallAngle = 0.0f;
+};
+
+/**
  * Ants governed by simple state machine
  */
 struct Ant {
   // constants
   constexpr static const float TO_FOOD_SCORE_DEPOSIT =
       1.0f; // how much to add to the "to food score"
+  constexpr static const float TO_HOME_SCORE_DEPOSIT =
+      1.0f; // how much to add to the "to home score"
   constexpr static const float WOBBLE_ANGLE = 90.0f * M_PI / 180.0f;
   constexpr static const float SPEED = 100.0f;
   constexpr static const float RADIUS = 2;
+
+  // sample constants
+  constexpr static const float DEFAULT_DETECTION_RADIUS =
+      100.0f; // in world units
+  constexpr static const float DEFAULT_DETECTION_ANGLE = 45.0f * M_PI / 180.0f;
+  constexpr static const int DEFAULT_NUM_SAMPLES = 10;
 
   // position
   sf::Vector2f position;
@@ -61,7 +86,14 @@ struct Ant {
   void render(sf::RenderWindow &window) {
     sf::CircleShape shape(RADIUS);
     shape.setPosition(position - radiusVector);
-    shape.setFillColor(sf::Color::Red);
+    switch (state) {
+    case AntState::SEARCHING:
+      shape.setFillColor(sf::Color::Red);
+      break;
+    case AntState::RETURNING:
+      shape.setFillColor(sf::Color::Blue);
+      break;
+    }
     window.draw(shape);
   }
 
@@ -78,6 +110,23 @@ struct Ant {
    * Returns to the colony
    */
   void returnToColony(float dt);
+
+  // ===== UTILITIES ===== //
+
+  /**
+   * Samples the world in a cone shape
+   * @param detection_radius The radius of the cone
+   * @param detection_angle The angle of the cone (on either side)
+   * @param num_samples The number of samples to take
+   * @return The samples
+   *
+   * Right now, goes for strongest
+   * TODO: heuristic accounting for distance too
+   * TODO: GPU optimization, should look into feasibility/benefits
+   */
+  Sample sampleCone(float detection_radius = DEFAULT_DETECTION_RADIUS,
+                    float detection_angle = DEFAULT_DETECTION_ANGLE,
+                    int num_samples = DEFAULT_NUM_SAMPLES);
 };
 
 #endif // ANT_HPP
