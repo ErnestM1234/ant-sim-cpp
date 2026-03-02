@@ -10,6 +10,9 @@ enum class AntState {
   RETURNING, // returning to the colony
 };
 
+/**
+ * Ants governed by simple state machine
+ */
 struct Ant
 {
   // constants
