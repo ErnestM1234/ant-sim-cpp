@@ -77,10 +77,6 @@ template <typename T> struct Grid {
   }
 
   // World position → wrapped world position
-  // sf::Vector2f getToroidalPosition(float x, float y) {
-  //   auto grid = getToroidalPositionOnGrid(x, y);
-  //   return {grid.x * cellWidth + xOffset, grid.y * cellHeight + yOffset};
-  // }
   sf::Vector2f getToroidalPosition(float x, float y) {
     float worldWidth = width * cellWidth;
     float worldHeight = height * cellHeight;

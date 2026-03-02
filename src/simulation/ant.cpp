@@ -1,7 +1,6 @@
 #include "ant.hpp"
 
 #include "../world/colony_grid.hpp"
-#include <iostream>
 
 // ===== STATES ===== //
 
@@ -16,6 +15,7 @@ void Ant::searchForFood(float dt) {
   bool found_food = world.sharedGrid.get(position.x, position.y).foodScore > 0;
   if (found_food) {
     world.sharedGrid.get(position.x, position.y).foodScore = 0.0f;
+    pheromone_score = STARTING_PHEREMONE_SCORE;
 
     // update state
     this->has_food = true;
@@ -51,10 +51,12 @@ void Ant::returnToColony(float dt) {
       fmin(1.0f, colonyCell.toHomeScore + TO_HOME_SCORE_DEPOSIT);
 
   // handle meet colony
-  float distance_to_colony = (position - colony_position).lengthSquared();
-  if (distance_to_colony < colony_radius_squared) {
+  float distance_to_colony_squared =
+      (position - colony_position).lengthSquared();
+  if (distance_to_colony_squared < colony_radius_squared) {
     this->has_food = false;
     this->state = AntState::SEARCHING;
+    pheromone_score = STARTING_PHEREMONE_SCORE;
     return;
   }
 
@@ -62,12 +64,12 @@ void Ant::returnToColony(float dt) {
   Sample sample = sampleCone();
   if (sample.homeDetected) {
     // follow home pheromone trail
-    velocity = {cos(sample.toHomeAngle) * SPEED,
-                sin(sample.toHomeAngle) * SPEED};
+    velocity = {cos(sample.homeAngle) * SPEED, sin(sample.homeAngle) * SPEED};
     return;
   } else if (sample.toFoodScore > 0) {
     // follow food trail
-    velocity = {cos(sample.foodAngle) * SPEED, sin(sample.foodAngle) * SPEED};
+    velocity = {cos(sample.toFoodAngle) * SPEED,
+                sin(sample.toFoodAngle) * SPEED};
     return;
   }
 
@@ -123,7 +125,7 @@ Sample Ant::sampleCone(float detection_radius, float detection_angle,
       float foodScore = world.sharedGrid.get(sample_pos).foodScore;
       if (foodScore > 0) {
         float food_distance = (sample_pos - position).lengthSquared();
-        if (foodScore < best_food_distance) {
+        if (food_distance < best_food_distance) {
           best_food_distance = foodScore;
           best.foodAngle = angle;
           best.foodDetected = true;

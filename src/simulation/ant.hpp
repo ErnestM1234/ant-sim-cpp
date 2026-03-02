@@ -42,6 +42,8 @@ struct Ant {
   constexpr static const float WOBBLE_ANGLE = 90.0f * M_PI / 180.0f;
   constexpr static const float SPEED = 100.0f;
   constexpr static const float RADIUS = 2;
+  constexpr static const float STARTING_PHEREMONE_SCORE = 1.0f;
+  constexpr static const float PHEREMONE_DECAY_RATE = 0.01f;
 
   // sample constants
   constexpr static const float DEFAULT_DETECTION_RADIUS =
@@ -49,8 +51,8 @@ struct Ant {
   constexpr static const float DEFAULT_DETECTION_ANGLE = 45.0f * M_PI / 180.0f;
   constexpr static const int DEFAULT_NUM_ANGLE_SAMPLES = 5;
   constexpr static const int DEFAULT_NUM_SAMPLES_PER_ANGLE = 5;
-  constexpr static const bool SHOW_SAMPLING_CONE = true;
-  constexpr static const bool SHOW_SAMPLING_DOTS = true;
+  constexpr static const bool SHOW_SAMPLING_CONE = false;
+  constexpr static const bool SHOW_SAMPLING_DOTS = false;
 
   // position
   sf::Vector2f position;
@@ -63,6 +65,7 @@ struct Ant {
   // behavior
   AntState state = AntState::SEARCHING;
   bool has_food = false;
+  float pheromone_score = STARTING_PHEREMONE_SCORE;
 
   // colony
   sf::Vector2f colony_position;
@@ -83,6 +86,9 @@ struct Ant {
   }
 
   void update(float dt) {
+    // decrement pheromone score
+    decrementPheromoneScore(dt);
+
     // execute behavior
     switch (state) {
     case AntState::SEARCHING:
@@ -139,6 +145,13 @@ struct Ant {
   void returnToColony(float dt);
 
   // ===== UTILITIES ===== //
+
+  /**
+   * Decrement the pheromone score
+   */
+  void decrementPheromoneScore(float dt) {
+    pheromone_score = fmax(0.0f, pheromone_score - PHEREMONE_DECAY_RATE * dt);
+  }
 
   /**
    * Samples the world in a cone shape
