@@ -12,13 +12,13 @@ void Ant::searchForFood(float dt) {
       fmin(1.0f, colonyCell.toFoodScore + TO_FOOD_SCORE_DEPOSIT);
 
   // handle remove food
-  bool has_food = world.sharedGrid.get(position.x, position.y).foodScore > 0;
-  if (has_food) {
+  bool found_food = world.sharedGrid.get(position.x, position.y).foodScore > 0;
+  if (found_food) {
     world.sharedGrid.get(position.x, position.y).foodScore = 0.0f;
 
     // update state
-    has_food = true;
-    state = AntState::RETURNING;
+    this->has_food = true;
+    this->state = AntState::RETURNING;
     return;
   }
 

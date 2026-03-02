@@ -44,13 +44,6 @@ struct Ant {
   }
 
   void update(float dt) {
-    // update state
-    if (has_food) {
-      state = AntState::RETURNING;
-    } else {
-      state = AntState::SEARCHING;
-    }
-
     // execute behavior
     switch (state) {
     case AntState::SEARCHING:

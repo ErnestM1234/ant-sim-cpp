@@ -107,6 +107,18 @@ template <typename T> struct Grid {
     cell.setFillColor(color);
     window.draw(cell);
   }
+  void renderCell(sf::VertexArray &va, int x, int y, sf::Color color) {
+    float px = x * cellWidth + xOffset;
+    float py = y * cellHeight + yOffset;
+    // triangle 1
+    va.append({{px, py}, color});
+    va.append({{px + cellWidth, py}, color});
+    va.append({{px + cellWidth, py + cellHeight}, color});
+    // triangle 2
+    va.append({{px, py}, color});
+    va.append({{px + cellWidth, py + cellHeight}, color});
+    va.append({{px, py + cellHeight}, color});
+  }
 };
 
 #endif // GRID_HPP

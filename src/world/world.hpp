@@ -19,8 +19,8 @@ struct World {
     // Temp: inject food into the shared grid
     int food_x = 800;
     int food_y = 100;
-    for (int i = 0; i < 10; i++) {
-      for (int j = 0; j < 10; j++) {
+    for (int i = 0; i < 100; i++) {
+      for (int j = 0; j < 100; j++) {
         sharedGrid.get(food_x + i, food_y + j).foodScore = 1.0f;
       }
     }

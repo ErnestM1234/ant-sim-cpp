@@ -33,6 +33,7 @@ struct ColonyGrid : Grid<ColonyCell> {
    * TODO: switch to using sf::VertexArray for performance
    */
   void render(sf::RenderWindow &window) {
+    sf::VertexArray va(sf::PrimitiveType::Triangles);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         // draw the cell (transparent proportionate to the score)
@@ -41,16 +42,17 @@ struct ColonyGrid : Grid<ColonyCell> {
           sf::Color color = sf::Color::Blue;
           color.a = static_cast<uint8_t>(
               std::clamp(cell.toHomeScore, 0.0f, 1.0f) * 255);
-          renderCell(window, x, y, color);
+          renderCell(va, x, y, color);
         }
         if (cell.toFoodScore > 0) {
           sf::Color color = sf::Color::Red;
           color.a = static_cast<uint8_t>(
               std::clamp(cell.toFoodScore, 0.0f, 1.0f) * 255);
-          renderCell(window, x, y, color);
+          renderCell(va, x, y, color);
         }
       }
     }
+    window.draw(va);
   }
 };
 

@@ -22,18 +22,20 @@ struct SharedGrid : Grid<SharedCell> {
   }
 
   void render(sf::RenderWindow &window) {
+    sf::VertexArray va(sf::PrimitiveType::Triangles);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         SharedCell cell = get(x, y);
         if (cell.wallScore > 0) {
           sf::Color color = sf::Color::White;
-          renderCell(window, x, y, color);
+          renderCell(va, x, y, color);
         } else if (cell.foodScore > 0) {
           sf::Color color = sf::Color::Yellow;
-          renderCell(window, x, y, color);
+          renderCell(va, x, y, color);
         }
       }
     }
+    window.draw(va);
   }
 };
 
