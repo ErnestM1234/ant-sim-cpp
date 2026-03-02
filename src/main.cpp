@@ -15,7 +15,7 @@ int main() {
   World world = World(COLONY_COUNT);
   std::vector<Colony> colonies = {};
   for (int i = 0; i < COLONY_COUNT; i++) {
-    colonies.push_back(Colony(world, {100.0f + i * 100.0f, 100.0f}, i));
+    colonies.push_back(Colony(world, {500.0f + i * 100.0f, 500.0f}, i));
   }
   Renderer renderer(colonies, world);
   Simulator simulator(colonies, world);

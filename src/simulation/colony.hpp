@@ -12,7 +12,7 @@
 struct Colony {
   // constants
   constexpr static const float RADIUS = 100;
-  constexpr static const int DEFAULT_NUM_ANTS = 100;
+  constexpr static const int DEFAULT_NUM_ANTS = 1;
 
   // position
   sf::Vector2f position;

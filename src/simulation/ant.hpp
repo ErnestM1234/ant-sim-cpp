@@ -15,6 +15,8 @@ enum class AntState {
  */
 struct Ant {
   // constants
+  constexpr static const float TO_FOOD_SCORE_DEPOSIT =
+      1.0f; // how much to add to the "to food score"
   constexpr static const float WOBBLE_ANGLE = 90.0f * M_PI / 180.0f;
   constexpr static const float SPEED = 100.0f;
   constexpr static const float RADIUS = 2;
