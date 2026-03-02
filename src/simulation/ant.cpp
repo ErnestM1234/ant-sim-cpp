@@ -107,3 +107,23 @@ Sample Ant::sampleCone(float detection_radius, float detection_angle,
 
   return best;
 }
+
+void Ant::renderSamplingCone(sf::RenderWindow &window, float detection_radius,
+                             float detection_angle, int num_angle_samples,
+                             int num_samples_per_angle) {
+  float heading = atan2(velocity.y, velocity.x);
+  sf::Color color(255, 255, 0, 40); // faint yellow
+  sf::VertexArray cone(sf::PrimitiveType::TriangleFan);
+  cone.append({position, color}); // center point
+
+  int segments = num_angle_samples;
+  for (int i = 0; i <= segments; i++) {
+    float angle =
+        heading - detection_angle + (2.0f * detection_angle * i) / segments;
+    sf::Vector2f tip =
+        position + sf::Vector2f{cos(angle), sin(angle)} * detection_radius;
+    cone.append({tip, color});
+  }
+
+  window.draw(cone);
+}

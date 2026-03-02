@@ -46,6 +46,7 @@ struct Ant {
   constexpr static const float DEFAULT_DETECTION_ANGLE = 45.0f * M_PI / 180.0f;
   constexpr static const int DEFAULT_NUM_ANGLE_SAMPLES = 5;
   constexpr static const int DEFAULT_NUM_SAMPLES_PER_ANGLE = 5;
+  constexpr static const bool SHOW_SAMPLING_CONE = false;
 
   // position
   sf::Vector2f position;
@@ -96,7 +97,18 @@ struct Ant {
       break;
     }
     window.draw(shape);
+    renderSamplingCone(window);
   }
+
+  /**
+   * Helper function to render the sampling cone
+   */
+  void
+  renderSamplingCone(sf::RenderWindow &window,
+                     float detection_radius = DEFAULT_DETECTION_RADIUS,
+                     float detection_angle = DEFAULT_DETECTION_ANGLE,
+                     int num_angle_samples = DEFAULT_NUM_ANGLE_SAMPLES,
+                     int num_samples_per_angle = DEFAULT_NUM_SAMPLES_PER_ANGLE);
 
   // ===== STATES ===== //
   // each type of STATE is a different behavior
