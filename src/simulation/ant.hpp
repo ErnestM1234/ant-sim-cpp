@@ -1,9 +1,9 @@
 #ifndef ANT_HPP
 #define ANT_HPP
 
-#include <SFML/Graphics.hpp>
 #include "../utils/random.hpp"
-
+#include "../world/world.hpp"
+#include <SFML/Graphics.hpp>
 
 enum class AntState {
   SEARCHING, // searching for food
@@ -13,8 +13,7 @@ enum class AntState {
 /**
  * Ants governed by simple state machine
  */
-struct Ant
-{
+struct Ant {
   // constants
   constexpr static const float WOBBLE_ANGLE = 90.0f * M_PI / 180.0f;
   constexpr static const float SPEED = 100.0f;
@@ -24,15 +23,19 @@ struct Ant
   sf::Vector2f position;
   sf::Vector2f velocity;
 
+  // world
+  World &world;
+  int colony_id;
+
   // behavior
   AntState state = AntState::SEARCHING;
 
   // rendering
   sf::Vector2f radiusVector = {RADIUS, RADIUS};
 
-  Ant(sf::Vector2f position) : position(position) {
-    static std::uniform_real_distribution<float> angle_dist(0.0f, 2.0f *
-      M_PI);
+  Ant(World &world, sf::Vector2f position, int colony_id)
+      : world(world), position(position), colony_id(colony_id) {
+    static std::uniform_real_distribution<float> angle_dist(0.0f, 2.0f * M_PI);
     float angle = angle_dist(rng());
     velocity = {cos(angle) * SPEED, sin(angle) * SPEED};
   }
@@ -43,19 +46,19 @@ struct Ant
 
     // execute behavior
     switch (state) {
-      case AntState::SEARCHING:
-        searchForFood(dt);
-        break;
-      case AntState::RETURNING:
-        returnToColony(dt);
-        break;
+    case AntState::SEARCHING:
+      searchForFood(dt);
+      break;
+    case AntState::RETURNING:
+      returnToColony(dt);
+      break;
     }
 
     // update position
     position += velocity * dt;
   }
 
-  void render(sf::RenderWindow& window) {
+  void render(sf::RenderWindow &window) {
     sf::CircleShape shape(RADIUS);
     shape.setPosition(position - radiusVector);
     shape.setFillColor(sf::Color::Red);
@@ -79,8 +82,6 @@ struct Ant
    * Returns to the colony
    */
   void returnToColony(float dt);
-
-
 };
 
 #endif // ANT_HPP

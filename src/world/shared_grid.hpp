@@ -17,6 +17,7 @@ struct SharedGrid {
   // properties
   Grid<SharedCell> grid;
 
+  SharedGrid() : grid() {}
   SharedGrid(int width, int height) : grid(width, height) {}
 
   void update(float dt) {

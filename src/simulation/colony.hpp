@@ -1,15 +1,15 @@
 #ifndef COLONY_HPP
 #define COLONY_HPP
 
-#include <SFML/Graphics.hpp>
+#include "../world/world.hpp"
 #include "ant.hpp"
+#include <SFML/Graphics.hpp>
 
 /**
  * Represents the base colony for ants
  **/
 
-struct Colony
-{
+struct Colony {
   // constants
   constexpr static const float RADIUS = 100;
   constexpr static const int DEFAULT_NUM_ANTS = 100;
@@ -21,19 +21,24 @@ struct Colony
   // rendering
   sf::Vector2f radiusVector = {RADIUS, RADIUS};
 
-  Colony(sf::Vector2f position, int numAnts = DEFAULT_NUM_ANTS): position(position) {
+  // other
+  int colony_id;
+
+  Colony(World &world, sf::Vector2f position, int colony_id,
+         int numAnts = DEFAULT_NUM_ANTS)
+      : position(position), colony_id(colony_id) {
     for (int i = 0; i < numAnts; i++) {
-      ants.push_back(Ant(position));
+      ants.push_back(Ant(world, position, colony_id));
     }
   }
 
   void update(float dt) {
-    for (auto& ant : ants) {
+    for (auto &ant : ants) {
       ant.update(dt);
     }
   }
 
-  void render(sf::RenderWindow& window) {
+  void render(sf::RenderWindow &window) {
     // draw colony
     sf::CircleShape shape(RADIUS);
     shape.setPosition(position - radiusVector);

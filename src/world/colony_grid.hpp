@@ -16,6 +16,7 @@ struct ColonyGrid {
   // properties
   Grid<ColonyCell> grid;
 
+  ColonyGrid() : grid() {}
   ColonyGrid(int width, int height) : grid(width, height) {}
 
   void update(float dt) {
