@@ -1,12 +1,12 @@
+#ifndef COLONY_HPP
+#define COLONY_HPP
+
 #include <SFML/Graphics.hpp>
 #include "ant.hpp"
 
 /**
  * Represents the base colony for ants
  **/
-
-#ifndef COLONY_HPP
-#define COLONY_HPP
 
 struct Colony
 {

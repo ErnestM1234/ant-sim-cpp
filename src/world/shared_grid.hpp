@@ -1,7 +1,7 @@
-#include "../world/grid.hpp"
-
 #ifndef SHARED_GRID_HPP
 #define SHARED_GRID_HPP
+
+#include "../world/grid.hpp"
 
 /**
  * Technically these are mutally exclusive but keeping as float for future

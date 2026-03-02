@@ -1,8 +1,8 @@
-#include "../world/grid.hpp"
-#include <SFML/Graphics.hpp>
-
 #ifndef COLONY_GRID_HPP
 #define COLONY_GRID_HPP
+
+#include "../world/grid.hpp"
+#include <SFML/Graphics.hpp>
 
 struct ColonyCell {
   float toHomeScore = 0.0f;

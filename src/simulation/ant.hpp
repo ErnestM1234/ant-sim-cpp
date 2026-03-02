@@ -1,8 +1,8 @@
-#include <SFML/Graphics.hpp>
-#include "../utils/random.hpp"
-
 #ifndef ANT_HPP
 #define ANT_HPP
+
+#include <SFML/Graphics.hpp>
+#include "../utils/random.hpp"
 
 
 enum class AntState {

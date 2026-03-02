@@ -1,8 +1,8 @@
-#include <SFML/Graphics.hpp>
-#include "simulation/colony.hpp"
-
 #ifndef RENDERER_HPP
 #define RENDERER_HPP
+
+#include <SFML/Graphics.hpp>
+#include "simulation/colony.hpp"
 
 /**
  * Handles the rendering of the colonies and ants

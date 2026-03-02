@@ -1,8 +1,8 @@
-#include <SFML/Graphics.hpp>
-#include <vector>
-
 #ifndef GRID_HPP
 #define GRID_HPP
+
+#include <SFML/Graphics.hpp>
+#include <vector>
 
 template <typename T> struct Grid {
   // constants

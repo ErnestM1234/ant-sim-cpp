@@ -1,7 +1,7 @@
-#include <random>
-
 #ifndef RANDOM_HPP
 #define RANDOM_HPP
+
+#include <random>
 
 /**
  * Returns a reference to a random number generator

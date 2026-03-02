@@ -1,8 +1,8 @@
-#include <SFML/Graphics.hpp>
-#include "colony.hpp"
-
 #ifndef SIMULATOR_HPP
 #define SIMULATOR_HPP
+
+#include <SFML/Graphics.hpp>
+#include "colony.hpp"
 
 /**
  * Handles the updating of the colonies and ants
