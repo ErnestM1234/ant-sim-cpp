@@ -56,6 +56,45 @@ template <typename T> struct Grid {
     set(position.x, position.y, value);
   }
 
+  // ===== TOROIDAL OPERATIONS ===== //
+
+  // Wrap grid coordinates (grid space → grid space)
+  int toroidalXOnGrid(int x) { return ((x % width) + width) % width; }
+  int toroidalYOnGrid(int y) { return ((y % height) + height) % height; }
+
+  // World position → wrapped grid coordinates
+  sf::Vector2i getToroidalPositionOnGrid(float x, float y) {
+    int gx = static_cast<int>((x - xOffset) / cellWidth);
+    int gy = static_cast<int>((y - yOffset) / cellHeight);
+    return {toroidalXOnGrid(gx), toroidalYOnGrid(gy)};
+  }
+  sf::Vector2i getToroidalPositionOnGrid(sf::Vector2f position) {
+    return getToroidalPositionOnGrid(position.x, position.y);
+  }
+
+  // World position → wrapped world position
+  sf::Vector2f getToroidalPosition(float x, float y) {
+    auto grid = getToroidalPositionOnGrid(x, y);
+    return {grid.x * cellWidth + xOffset, grid.y * cellHeight + yOffset};
+  }
+  sf::Vector2f getToroidalPosition(sf::Vector2f position) {
+    return getToroidalPosition(position.x, position.y);
+  }
+
+  // ===== CHECKS ===== //
+
+  // Returns true if in grid
+  bool isInGrid(int x, int y) {
+    return x >= 0 && x < width && y >= 0 && y < height;
+  }
+  bool isInGrid(float x, float y) {
+    return isInGrid(static_cast<int>((x - xOffset) / cellWidth),
+                    static_cast<int>((y - yOffset) / cellHeight));
+  }
+  bool isInGrid(sf::Vector2f position) {
+    return isInGrid(position.x, position.y);
+  }
+
   // ===== RENDERING ===== //
 
   /**

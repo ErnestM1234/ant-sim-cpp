@@ -31,6 +31,7 @@ struct Ant {
 
   // behavior
   AntState state = AntState::SEARCHING;
+  bool has_food = false;
 
   // rendering
   sf::Vector2f radiusVector = {RADIUS, RADIUS};
@@ -44,7 +45,11 @@ struct Ant {
 
   void update(float dt) {
     // update state
-    state = transition();
+    if (has_food) {
+      state = AntState::RETURNING;
+    } else {
+      state = AntState::SEARCHING;
+    }
 
     // execute behavior
     switch (state) {
@@ -56,8 +61,8 @@ struct Ant {
       break;
     }
 
-    // update position
-    position += velocity * dt;
+    // update position (wrapping around the grid)
+    position = world.sharedGrid.getToroidalPosition(position + velocity * dt);
   }
 
   void render(sf::RenderWindow &window) {
@@ -66,10 +71,6 @@ struct Ant {
     shape.setFillColor(sf::Color::Red);
     window.draw(shape);
   }
-
-  // ===== TRANSITIONS ===== //
-
-  AntState transition();
 
   // ===== STATES ===== //
   // each type of STATE is a different behavior
