@@ -44,7 +44,8 @@ struct Ant {
   constexpr static const float DEFAULT_DETECTION_RADIUS =
       100.0f; // in world units
   constexpr static const float DEFAULT_DETECTION_ANGLE = 45.0f * M_PI / 180.0f;
-  constexpr static const int DEFAULT_NUM_SAMPLES = 10;
+  constexpr static const int DEFAULT_NUM_ANGLE_SAMPLES = 5;
+  constexpr static const int DEFAULT_NUM_SAMPLES_PER_ANGLE = 5;
 
   // position
   sf::Vector2f position;
@@ -117,7 +118,8 @@ struct Ant {
    * Samples the world in a cone shape
    * @param detection_radius The radius of the cone
    * @param detection_angle The angle of the cone (on either side)
-   * @param num_samples The number of samples to take
+   * @param num_angle_samples The number of angles to sample
+   * @param num_samples_per_angle The number of samples to take per angle
    * @return The samples
    *
    * Right now, goes for strongest
@@ -126,7 +128,8 @@ struct Ant {
    */
   Sample sampleCone(float detection_radius = DEFAULT_DETECTION_RADIUS,
                     float detection_angle = DEFAULT_DETECTION_ANGLE,
-                    int num_samples = DEFAULT_NUM_SAMPLES);
+                    int num_angle_samples = DEFAULT_NUM_ANGLE_SAMPLES,
+                    int num_samples_per_angle = DEFAULT_NUM_SAMPLES_PER_ANGLE);
 };
 
 #endif // ANT_HPP
