@@ -20,10 +20,10 @@ struct ColonyGrid : Grid<ColonyCell> {
   void update(float dt) {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        get(x, y).toHomeScore =
-            fmax(0.0f, get(x, y).toHomeScore - DECAY_RATE * dt);
-        get(x, y).toFoodScore =
-            fmax(0.0f, get(x, y).toFoodScore - DECAY_RATE * dt);
+        getOnGrid(x, y).toHomeScore =
+            fmax(0.0f, getOnGrid(x, y).toHomeScore - DECAY_RATE * dt);
+        getOnGrid(x, y).toFoodScore =
+            fmax(0.0f, getOnGrid(x, y).toFoodScore - DECAY_RATE * dt);
       }
     }
   }
@@ -37,7 +37,7 @@ struct ColonyGrid : Grid<ColonyCell> {
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
         // draw the cell (transparent proportionate to the score)
-        ColonyCell cell = get(x, y);
+        ColonyCell cell = getOnGrid(x, y);
         if (cell.toHomeScore > 0) {
           sf::Color color = sf::Color::Blue;
           color.a = static_cast<uint8_t>(

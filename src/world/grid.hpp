@@ -9,8 +9,8 @@ template <typename T> struct Grid {
   // constants
   constexpr static const float DEFAULT_X_OFFSET = 0.0f;
   constexpr static const float DEFAULT_Y_OFFSET = 0.0f;
-  constexpr static const float DEFAULT_CELL_WIDTH = 5.0f;
-  constexpr static const float DEFAULT_CELL_HEIGHT = 5.0f;
+  constexpr static const float DEFAULT_CELL_WIDTH = 2.0f;
+  constexpr static const float DEFAULT_CELL_HEIGHT = 2.0f;
   constexpr static const int DEFAULT_WIDTH =
       Config::WINDOW_WIDTH / DEFAULT_CELL_WIDTH;
   constexpr static const int DEFAULT_HEIGHT =
@@ -37,24 +37,24 @@ template <typename T> struct Grid {
   // ===== GETTERS AND SETTERS ===== //
 
   // Get via grid coordinates
-  T &get(int x, int y) { return cells[y * width + x]; }
-  T &get(sf::Vector2i position) { return get(position.x, position.y); }
+  T &getOnGrid(int x, int y) { return cells[y * width + x]; }
+  T &getOnGrid(sf::Vector2i position) { return get(position.x, position.y); }
   // Get via position coordinates
   T &get(float x, float y) {
-    return get(static_cast<int>((x - xOffset) / cellWidth),
-               static_cast<int>((y - yOffset) / cellHeight));
+    return getOnGrid(static_cast<int>((x - xOffset) / cellWidth),
+                     static_cast<int>((y - yOffset) / cellHeight));
   }
   T &get(sf::Vector2f position) { return get(position.x, position.y); }
 
   // Set via grid coordinates
-  void set(int x, int y, T value) { cells[y * width + x] = value; }
-  void set(sf::Vector2i position, T value) {
-    set(position.x, position.y, value);
+  void setOnGrid(int x, int y, T value) { cells[y * width + x] = value; }
+  void setOnGrid(sf::Vector2i position, T value) {
+    setOnGrid(position.x, position.y, value);
   }
   // Set via position coordinates
   void set(float x, float y, T value) {
-    set(static_cast<int>((x - xOffset) / cellWidth),
-        static_cast<int>((y - yOffset) / cellHeight), value);
+    setOnGrid(static_cast<int>((x - xOffset) / cellWidth),
+              static_cast<int>((y - yOffset) / cellHeight), value);
   }
   void set(sf::Vector2f position, T value) {
     set(position.x, position.y, value);
@@ -77,9 +77,20 @@ template <typename T> struct Grid {
   }
 
   // World position → wrapped world position
+  // sf::Vector2f getToroidalPosition(float x, float y) {
+  //   auto grid = getToroidalPositionOnGrid(x, y);
+  //   return {grid.x * cellWidth + xOffset, grid.y * cellHeight + yOffset};
+  // }
   sf::Vector2f getToroidalPosition(float x, float y) {
-    auto grid = getToroidalPositionOnGrid(x, y);
-    return {grid.x * cellWidth + xOffset, grid.y * cellHeight + yOffset};
+    float worldWidth = width * cellWidth;
+    float worldHeight = height * cellHeight;
+    float wx = fmod(x - xOffset, worldWidth);
+    float wy = fmod(y - yOffset, worldHeight);
+    if (wx < 0)
+      wx += worldWidth;
+    if (wy < 0)
+      wy += worldHeight;
+    return {wx + xOffset, wy + yOffset};
   }
   sf::Vector2f getToroidalPosition(sf::Vector2f position) {
     return getToroidalPosition(position.x, position.y);

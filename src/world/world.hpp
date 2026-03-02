@@ -21,7 +21,7 @@ struct World {
     int food_y = 100;
     for (int i = 0; i < 100; i++) {
       for (int j = 0; j < 100; j++) {
-        sharedGrid.get(food_x + i, food_y + j).foodScore = 1.0f;
+        sharedGrid.getOnGrid(food_x + i, food_y + j).foodScore = 1.0f;
       }
     }
 

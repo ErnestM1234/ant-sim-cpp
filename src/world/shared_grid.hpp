@@ -25,7 +25,7 @@ struct SharedGrid : Grid<SharedCell> {
     sf::VertexArray va(sf::PrimitiveType::Triangles);
     for (int y = 0; y < height; y++) {
       for (int x = 0; x < width; x++) {
-        SharedCell cell = get(x, y);
+        SharedCell cell = getOnGrid(x, y);
         if (cell.wallScore > 0) {
           sf::Color color = sf::Color::White;
           renderCell(va, x, y, color);
